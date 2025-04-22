@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import Image from "next/image";
+import { User } from "@supabase/supabase-js";
 
 interface Post {
   id: string;
@@ -12,16 +12,23 @@ interface Post {
   price: number;
   image_url?: string;
 }
+interface Comment {
+  id: string;
+  user_id: string;
+  post_id: string;
+  content: string;
+  created_at: string;
+}
 
 const PostDetay = () => {
   const params = useParams();
   const postId = params?.id as string;
   const [post, setPost] = useState<Post | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState<number | null>(null);
   const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   //Post detayını al
   useEffect(() => {
@@ -49,7 +56,7 @@ const PostDetay = () => {
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getSession();
-      setUser(data?.session?.user);
+      setUser(data?.session?.user ?? null);
     };
     getUser();
   }, []);

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface Posts {
   id: string;
@@ -14,26 +13,6 @@ interface Posts {
 
 export default function Home() {
   const [posts, setPosts] = useState<Posts[]>([]);
-  const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error("Session alma hatası:", error.message);
-        return;
-      }
-
-      setUser(session?.user ?? null);
-    };
-
-    getUser();
-  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -65,7 +44,7 @@ export default function Home() {
                 className="object-cover w-full h-full group-hover:scale-105 transition"
               />
             ) : (
-              <span className="text-gray-500">G\u00f6rsel Yok</span>
+              <span className="text-gray-500">Görsel Yok</span>
             )}
           </div>
           <div className="p-4">
